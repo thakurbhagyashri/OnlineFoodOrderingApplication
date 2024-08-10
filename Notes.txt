@@ -1,0 +1,46 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+//React element
+const heading = React.createElement("h1", { id: "heading1" }, "hello");
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(heading);
+console.log(heading);
+
+//JSX element:is not a HTML but its like a HTML syntax or XML
+const heading2 = <h2 id="heading1">Hello2</h2>;
+root.render(heading2);
+console.log(heading2);
+
+//React Components:
+// class Base -OLD
+// functional -NEW
+
+const title = (
+  <h2 id="title1" tabIndex="5">
+    -----Learn React Element----
+  </h2>
+); //its an element of javascript
+
+//Used any javascript inside component eg.element title;
+
+const ParaComp = () => (
+      <div>
+        <h2 id="para1">i am a Para component</h2>
+      </div>
+    );
+  
+const num = 1000;
+const HeadingComponent = () => {
+  return (
+    // we can call a functional component as inside js also
+    <div id="container">
+      {ParaComp()}
+      {title}
+      <h3>{num + 1}</h3>
+      <h2 id="heading2">i am a functional component</h2>
+    </div>
+  );
+};
+
+root.render(<HeadingComponent />);
