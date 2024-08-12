@@ -1,0 +1,1 @@
+const FOOD_URL="";
