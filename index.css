@@ -59,3 +59,27 @@ width: 150px;
     display: flex;
     flex-wrap: wrap;
   }
+
+  .shimmer-container
+  {
+    display: flex;
+    flex-wrap: wrap;
+  
+  }
+
+  .shimmer-card
+  {
+    margin: 20px;
+    width: 200px;
+    height: 300px;
+    background-color: #f0f0f0;
+  }
+  .login
+  {
+    margin-top: 20px;
+    background-color: #6ec824;
+    border-style: none;
+    color: white;
+    width: 90px;
+  }
+  
