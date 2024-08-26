@@ -1,42 +1,64 @@
 import React, { useState, useEffect } from "react";
 import { RestroCard } from "./RestroCard";
-import resList from "../Utils/mockData";
 import { Link } from "react-router-dom";
+import Shimmer from "./Shimmer";
 
 export const Body = () => {
-  const { restaurants } = resList;
-  const [restorantList, setRestroList] = useState(restaurants);
-  const [filterRestro, setFilterRestro] = useState(restaurants);
+  const [restaurantList, setRestaurantList] = useState([]);
+  const [filterRestaurant, setFilterRestaurant] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   console.log("useEffect Call");
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.61610&lng=73.72860&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      );
 
-  //     const data = await fetch(
-  //       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.61610&lng=73.72860&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-  //     );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-  //     const json = await data.json();
-  //     console.log(json);
-  //      const restaurantsData = json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-  //     setRestroList(restaurantsData);
-  //     setFilterRestro(restaurantsData);
+      const json = await response.json();
+      console.log("Fetched Data:", json);
 
-  // };
+      const restaurantsData = json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+  
 
-  // if (restorantList.length === 0) {
-  //   return <Shimmer />;
-  //   console.log("loading call");
+      setRestaurantList(restaurantsData);
+      setFilterRestaurant(restaurantsData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("Failed to load data. Please try again later.");
+      setLoading(false);
+    }
+  };
 
-  // }
-  // else{
-  //   console.log("data displayed");
+  const handleSearch = () => {
+    const filteredList = restaurantList.filter((res) =>
+      res.info?.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilterRestaurant(filteredList);
+  };
 
-  // }
+  const handleTopRestaurants = () => {
+    const filteredList = restaurantList.filter((res) => res.info?.avgRating >= 3);
+    setFilterRestaurant(filteredList);
+  };
+
+  if (loading) {
+    return <Shimmer />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="body">
@@ -48,33 +70,28 @@ export const Body = () => {
       />
       <button
         className="btn"
-        onClick={() => {
-          const filterRestro = restorantList.filter((res) =>
-            res.name.toLowerCase().includes(searchText.toLowerCase())
-          );
-          setFilterRestro(filterRestro);
-        }}
+        onClick={handleSearch}
       >
         Search
       </button>
       <div className="search">
         <button
           className="button1"
-          onClick={() => {
-            const filteredList = restorantList.filter((res) => res.rating >= 3);
-            setRestroList(filteredList);
-          }}
+          onClick={handleTopRestaurants}
         >
-          Top Restorant
+          Top Restaurants
         </button>
       </div>
       <div className="res-container">
-        {filterRestro.map((restaurant) => (
-          <Link to={"/restaurants/" + restaurant.id}>
-            {" "}
-            <RestroCard key={restaurant.id} restaurant={restaurant} />
-          </Link>
-        ))}
+        {filterRestaurant.length > 0 ? (
+          filterRestaurant.map((restaurant) => (
+            <Link to={`/restaurants/${restaurant?.info?.id}`} key={restaurant?.info?.id}>
+              <RestroCard restaurant={restaurant} />
+            </Link>
+          ))
+        ) : (
+          <p>No restaurants found</p>
+        )}
       </div>
     </div>
   );
