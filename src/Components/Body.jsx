@@ -27,8 +27,9 @@ export const Body = () => {
       const json = await response.json();
       console.log("Fetched Data:", json);
 
-      const restaurantsData = json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-  
+      const restaurantsData =
+        json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants || [];
 
       setRestaurantList(restaurantsData);
       setFilterRestaurant(restaurantsData);
@@ -48,7 +49,9 @@ export const Body = () => {
   };
 
   const handleTopRestaurants = () => {
-    const filteredList = restaurantList.filter((res) => res.info?.avgRating >= 3);
+    const filteredList = restaurantList.filter(
+      (res) => res.info?.avgRating >= 4.5
+    );
     setFilterRestaurant(filteredList);
   };
 
@@ -62,30 +65,30 @@ export const Body = () => {
 
   return (
     <div className="body">
-      <input
-        type="text"
-        className="search-box"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-      <button
-        className="btn"
-        onClick={handleSearch}
-      >
-        Search
-      </button>
-      <div className="search">
-        <button
-          className="button1"
-          onClick={handleTopRestaurants}
-        >
-          Top Restaurants
+      <div className="row-container">
+        <input
+          type="text"
+          className="search-box"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <button className="btn" onClick={handleSearch}>
+          Search
         </button>
+
+        <div className="search">
+          <button className="button1" onClick={handleTopRestaurants}>
+            Top Restaurants
+          </button>
+        </div>
       </div>
       <div className="res-container">
         {filterRestaurant.length > 0 ? (
           filterRestaurant.map((restaurant) => (
-            <Link to={`/restaurants/${restaurant?.info?.id}`} key={restaurant?.info?.id}>
+            <Link
+              to={`/restaurants/${restaurant?.info?.id}`}
+              key={restaurant?.info?.id}
+            >
               <RestroCard restaurant={restaurant} />
             </Link>
           ))

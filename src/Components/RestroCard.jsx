@@ -4,7 +4,6 @@ export const RestroCard = ({ restaurant }) => {
     name,
     areaName,
     avgRating,
-    id,
     image = "https://media-assets.swiggy.com/swiggy/image/upload/" +
       restaurant.info.cloudinaryImageId,
   } = restaurant?.info || {};
@@ -14,7 +13,6 @@ export const RestroCard = ({ restaurant }) => {
       <h3>{name}</h3>
       <h4>
         {areaName}
-        {id}
       </h4>
       <h4>Rating: {avgRating}</h4>
     </div>
