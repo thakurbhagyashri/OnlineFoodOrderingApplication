@@ -19,7 +19,7 @@ export const RestaurantMenu = () => {
     console.log("json" + json);
     setResInfo(json.data);
   };
-  if (resInfo === null) return <Shimmer2/>;
+  if (resInfo === null) return <Shimmer2 />;
 
   const { name, cuisines, costForTwo } = resInfo?.cards[2]?.card?.card.info;
   const { itemCards } =
