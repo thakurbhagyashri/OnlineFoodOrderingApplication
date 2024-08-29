@@ -2,44 +2,49 @@ import React, { useState, useEffect } from "react";
 import { RestroCard } from "./RestroCard";
 import { Link } from "react-router-dom";
 import Shimmer from "./Shimmer";
+import useOnlineStatus from "../Utils/useOnlineStatus";
+import useFetchRestaurantsList from "../Utils/useFetchRestaurantsList";
 
 export const Body = () => {
-  const [restaurantList, setRestaurantList] = useState([]);
-  const [filterRestaurant, setFilterRestaurant] = useState([]);
+  // const [restaurantList, setRestaurantList] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // const [filterRestaurant, setFilterRestaurant] = useState([]);
+  const[restaurantList, loading, error]=useFetchRestaurantsList();
   const [searchText, setSearchText] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+ 
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    setFilterRestaurant(restaurantList); // Initialize filterRestaurant with the fetched data
+  }, [restaurantList]);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.61610&lng=73.72860&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.61610&lng=73.72860&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+  //     );
 
-      const json = await response.json();
-      console.log("Fetched Data:", json);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
 
-      const restaurantsData =
-        json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
-          ?.restaurants || [];
+  //     const json = await response.json();
+  //     console.log("Fetched Data:", json);
 
-      setRestaurantList(restaurantsData);
-      setFilterRestaurant(restaurantsData);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError("Failed to load data. Please try again later.");
-      setLoading(false);
-    }
-  };
+  //     const restaurantsData =
+  //       json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+  //         ?.restaurants || [];
+
+  //     setRestaurantList(restaurantsData);
+  //     setFilterRestaurant(restaurantsData);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setError("Failed to load data. Please try again later.");
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleSearch = () => {
     const filteredList = restaurantList.filter((res) =>
@@ -47,7 +52,9 @@ export const Body = () => {
     );
     setFilterRestaurant(filteredList);
   };
-
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false)
+    return <h1> You are offline ,please chcek your intrenet connection</h1>;
   const handleTopRestaurants = () => {
     const filteredList = restaurantList.filter(
       (res) => res.info?.avgRating >= 4.5

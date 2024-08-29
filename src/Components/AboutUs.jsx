@@ -5,8 +5,8 @@ const AboutUs = () => {
   return (
     <>
       <h2>AboutUs pge...!</h2>
-      {/* <User name={"Bhagya"}location={"pune"}/> */}
-      <UserClass name={"Bhagya"} location={"pune"}/>
+      <User name={"Bhagya"}location={"pune"}/>
+      {/* <UserClass name={"Bhagya"} location={"pune"}/> */}
     </>
   );
 };
