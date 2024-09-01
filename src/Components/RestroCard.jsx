@@ -35,7 +35,7 @@ const RestroCard = ({ restaurant }) => {
   );
 };
 
-// Higher-order component :
+// Higher-order component:
 export const withPromotedLabel = (RestroCard) => {
   return (props) => {
     return (
