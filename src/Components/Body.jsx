@@ -1,49 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { RestroCard } from "./RestroCard";
+import RestroCard, { withPromotedLabel } from "./RestroCard";
 import { Link } from "react-router-dom";
 import Shimmer from "./Shimmer";
 import useOnlineStatus from "../Utils/useOnlineStatus";
 import useFetchRestaurantsList from "../Utils/useFetchRestaurantsList";
 
 export const Body = () => {
-  // const [restaurantList, setRestaurantList] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
   const [filterRestaurant, setFilterRestaurant] = useState([]);
-  const { restaurantList, loading, error } = useFetchRestaurantsList();
+  const { restaurantList, loading, error } = useFetchRestaurantsList();//custom hooks
   const [searchText, setSearchText] = useState("");
-  const [rateFilter, setRateFilter] = useState([]);
+  const RestaurantCardPromoted = withPromotedLabel(RestroCard);
 
   useEffect(() => {
     setFilterRestaurant(restaurantList); // Initialize filterRestaurant with the fetched data
   }, [restaurantList]);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.61610&lng=73.72860&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-
-  //     const json = await response.json();
-  //     console.log("Fetched Data:", json);
-
-  //     const restaurantsData =
-  //       json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
-  //         ?.restaurants || [];
-
-  //     setRestaurantList(restaurantsData);
-  //     setFilterRestaurant(restaurantsData);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     setError("Failed to load data. Please try again later.");
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleSearch = () => {
     const filteredList = restaurantList.filter((res) =>
@@ -51,9 +21,11 @@ export const Body = () => {
     );
     setFilterRestaurant(filteredList);
   };
+
   const onlineStatus = useOnlineStatus();
-  if (onlineStatus === false)
-    return <h1> You are offline ,please chcek your intrenet connection</h1>;
+  if (onlineStatus === false) {
+    return <h1>You are offline, please check your internet connection</h1>;
+  }
 
   const handleTopRestaurants = () => {
     const filteredList = restaurantList.filter(
@@ -63,26 +35,30 @@ export const Body = () => {
   };
 
   const maxRate = (costForTwo) => {
-    if (typeof costForTwo === 'string') {
-      // Remove non-numeric characters except the decimal point
-      const numericValue = parseFloat(costForTwo.replace(/[^\d.]/g, ''));
-      // Return the numeric value if it is finite; otherwise, return 0
+    if (typeof costForTwo === "string") {
+      const numericValue = parseFloat(costForTwo.replace(/[^\d.]/g, ""));
       return isFinite(numericValue) ? numericValue : 0;
     }
     return 0;
   };
-  
-   
+
   const handleByRate = () => {
-    const maxCost = 300; // Filter for restaurants with costForTwo less than 500
-    const rateFilter = restaurantList.filter((res) => {
-      const cost = maxRate(res.info?.costForTwo); // Use correct property name
+    const maxCost = 300; // Filter for restaurants with costForTwo less than 300
+    const filteredList = restaurantList.filter((res) => {
+      const cost = maxRate(res.info?.costForTwo);
       return cost < maxCost;
     });
-    console.log(rateFilter);
-    setRateFilter(rateFilter);
+    setFilterRestaurant(filteredList);
   };
-  
+
+  const handleByLocation = () => {
+    const locPune = restaurantList.filter(
+      (res) =>
+        res.info?.locality.toLowerCase() === "hinjewadi" &&
+        res.info?.avgRating > 4
+    );
+    setFilterRestaurant(locPune);
+  };
 
   if (loading) {
     return <Shimmer />;
@@ -97,31 +73,132 @@ export const Body = () => {
       <div className="row-container">
         <input
           type="text"
-          className="search-box"
+          className="
+            p-3
+            m-2
+            border
+            border-gray-300
+            rounded-lg
+            shadow-sm
+            focus:outline-none
+            focus:ring-2
+            focus:ring-slate-400
+            focus:border-slate-500
+            transition
+            duration-300
+            ease-in-out
+            bg-white
+            text-gray-700
+            placeholder-gray-500
+            w-full
+            max-w-md
+          "
+          placeholder="Search here..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button className="btn" onClick={handleSearch}>
+        <button
+          className="
+            px-4
+            py-2
+            bg-orange-500
+            text-white
+            font-semibold
+            rounded-lg
+            shadow-md
+            hover:bg-orange-600
+            focus:outline-none
+            focus:ring-2
+            focus:ring-orange-300
+            transition
+            duration-300
+            ease-in-out
+          "
+          onClick={handleSearch}
+        >
           Search
         </button>
 
-        <div className="search">
-          <button className="button1" onClick={handleTopRestaurants}>
-            Top Restaurants
-          </button>
-          <button className="button1" onClick={handleByRate}>
-            500+
-          </button>
-        </div>
+        <button
+          className="
+            m-2
+            px-4
+            py-2
+            bg-orange-500
+            text-white
+            font-semibold
+            rounded-lg
+            shadow-md
+            hover:bg-orange-600
+            focus:outline-none
+            focus:ring-2
+            focus:ring-orange-300
+            transition
+            duration-300
+            ease-in-out
+          "
+          onClick={handleTopRestaurants}
+        >
+          Top Restaurants
+        </button>
+
+        <button
+          className="
+            m-2
+            px-4
+            py-2
+            bg-orange-500
+            text-white
+            font-semibold
+            rounded-lg
+            shadow-md
+            hover:bg-orange-600
+            focus:outline-none
+            focus:ring-2
+            focus:ring-orange-300
+            transition
+            duration-300
+            ease-in-out
+          "
+          onClick={handleByRate}
+        >
+          Rs.200-Rs.300
+        </button>
+        <button
+          className="
+            m-2
+            px-4
+            py-2
+            bg-orange-500
+            text-white
+            font-semibold
+            rounded-lg
+            shadow-md
+            hover:bg-orange-600
+            focus:outline-none
+            focus:ring-2
+            focus:ring-orange-300
+            transition
+            duration-300
+            ease-in-out
+          "
+          onClick={handleByLocation}
+        >
+          Best Hinjewadi Restaurants
+        </button>
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap">
         {filterRestaurant.length > 0 ? (
           filterRestaurant.map((restaurant) => (
             <Link
               to={`/restaurants/${restaurant?.info?.id}`}
               key={restaurant?.info?.id}
             >
-              <RestroCard restaurant={restaurant} />
+              {restaurant?.info?.avgRating > 4 ? (
+                <RestaurantCardPromoted restaurant={restaurant} />
+              ) : (
+                <RestroCard restaurant={restaurant} />
+              )}
             </Link>
           ))
         ) : (
