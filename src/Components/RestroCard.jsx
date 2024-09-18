@@ -21,14 +21,14 @@ const RestroCard = ({ restaurant }) => {
         <h4>Rating: {avgRating}</h4>
       </div> */}
       {avgRating <= 4 ? (
-        <div className="bg-custom-orange ">
+        <div className="text-amber-500 ">
           {" "}
-          <h4>Rating: {avgRating}</h4>
+          <h4 className="font-bold">⭐{avgRating}</h4>
         </div>
       ) : (
         <div className="">
           {" "}
-          <h4>Rating: {avgRating}</h4>
+          <h4 className="font-bold text-lime-700">⭐{avgRating}</h4>
         </div>
       )}
     </div>
