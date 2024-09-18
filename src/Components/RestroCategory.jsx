@@ -1,12 +1,11 @@
 import { useState } from "react";
 import ItemList from "./ItemList";
-const RestroCategory = ({ data }) => {
+const RestroCategory = ({ data, showItems,setShowIndex }) => {
   console.log(data);
-  const [showItems,setShowItems]=useState(false);
+  // const [showItems,setShowItems]=useState(false);
   const handleClick=()=>
   {
-    console.log("Clicked");
-    setShowItems(!showItems);
+    setShowIndex();
   }
 
   return (<div>

@@ -6,6 +6,12 @@ import Shimmer2 from "./Shimmer2";
 import useRestaurantMenu from "../Utils/useRestaurantMenu";
 import RestroCategory from "./RestroCategory";
 export const RestaurantMenu = () => {
+ const [showIndex,setShowIndex]=useState(null);
+  // const handleClick=()=>
+  // {
+  //   console.log("Clicked");
+  //   setShowItems(!showItems);
+  // }
   // const [resInfo, setResInfo] = useState(null);
   const { resId } = useParams();//its a hook/utility function
   console.log(resId);
@@ -33,9 +39,16 @@ export const RestaurantMenu = () => {
         ))}
       </ul> */}
       <ul>
-        {categories.map((i)=>
+        {categories.map((i,index)=>
         (
-          <li><RestroCategory data={i.card.card}/></li>
+          <li><RestroCategory data={i.card.card}
+           showItems={index===showIndex?true:false}
+           setShowIndex={()=>
+           {
+           setShowIndex(prevIndex => (prevIndex === index ? null : index));
+          //  setShowIndex(index);
+           }
+           }/></li>
         ))}
       </ul>
     </div>
